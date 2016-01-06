@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="3600">
+	<Properties>
+		<Property name="log-path">/opt/</Property>
+		<Property name="log-level">info</Property>
+		<Property name="isAsync">false</Property>
+	</Properties>
+	<Appenders>
+		<!-- <Console name="console-log" target="SYSTEM_OUT" > <PatternLayout pattern="[%-5level] 
+			%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1}:%L - %msg%n" /> </Console> -->
+		<RollingFile name="shippable-log" fileName="${log-path}/checkout.log"
+			filePattern="${log-path}/shippable-%d{yyyy-MM-dd}.log.gz"
+			immediateFlush="true">
+			<!-- <ClassNameRegexFilter regex=".*Product.*" onMatch="ACCEPT" onMismatch="DENY"/> -->
+			<PatternLayout>
+				<pattern>[%-5level] %d{dd-MM-YYYY HH:mm:ss} %c{1}:%L %M %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+
+	</Appenders>
+
+	<Loggers>
+		<logger name="com.shippable" level="${log-level}"
+			additivity="false">
+			<AppenderRef ref="shippable-log" />
+		</logger>
+
+		<Root level="${log-level}" includeLocation="true">
+			<AppenderRef ref="console-log" />
+			<AppenderRef ref="shippable-log" />
+		</Root>
+	</Loggers>
+</Configuration>
