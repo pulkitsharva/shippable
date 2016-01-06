@@ -1,43 +1,64 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  pageEncoding="ISO-8859-1"%>
-<html data-ng-app="demoApp">
-	<head>
-		<script src="scripts/angular.js"></script>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.js"></script>
-<!-- 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.js"></script> -->
-		<script src="scripts/app.js"></script>
-		<script src="scripts/controllers.js"></script>
-	<meta charset="ISO-8859-1">
-	<title>RouteEx</title>
-	</head>
-		<body>
-			<div data-ng-controller="Controller1">
-			  <form data-ng-submit="createPerson()">
-			  <p>Create a new user:</p>
-			  <p>
-			    Name: <input data-ng-model="name" />
-			  </p>
-			  <input type="submit" value="Create" />
-			  </form>
-			  <p data-ng-show="newUser">
-			     New User created with name: {{newUser}}
-			  </p>
-			  <input data-ng-model="searchName" />
-			  <button data-ng-click="getPerson()" >Get</button>
-			  <button data-ng-click="getAllPerson()" >GetAll</button>
-			  <p data-ng-show="newUserName">
-			    User : {{newUserName}}
-			   </p>
-			   <div data-ng-show="users">
-<!-- 	this will get all user object		    User : {{users}} -->
-			  
-				<table border=1 >
-				<th>Name</th>
-				<th>Created</th>
-			    <tr data-ng-repeat="user in users | filter:q| orderBy:'name'">
-			       	<td>{{user.name}}</td><td>{{user.createdAt}}</td>
-			    </tr></table>
-			    	  
-	 		 </div>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<meta charset="ISO-8859-1">
+<html>
+<head>
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/bootstrap.css" />">
+<script type="text/javascript"
+	src="<c:url value="/resources/js/jquery-2.1.4.min.js" />"></script>
+
+<title>Github Issue</title>
+</head>
+<body>
+	<div class="container">
+		<div class="page">
+			<div id='loadingmessage' style='display: none'>
+				Sit back while we crunch numbers for you.<br> <img
+					src='<c:url value="/resources/images/loader.gif" />' />
+			</div>
+			<h1>Github</h1>
+			<hr />
+			<div id="alert" class="alert alert-danger" style='display: none'>
+				<strong>Alert!</strong>
+				<div id='error'></div>
+			</div>
+			<form id="form">
+				<label>Repo Url</label> <input id="repo" name="repo" type="text">
+				<hr />
+				<button type="submit" class="btn">Submit</button>
+			</form>
 		</div>
-		</body>
+	</div>
+</body>
+<script type="text/javascript">
+$("form").submit(function (e) {
+	e.preventDefault();
+	$("html").fadeOut();
+	var url = $('#repo').val();
+	$('#loadingmessage').show(); // show the loading message.
+	$.ajax({
+		url : "/shippable/issues",
+		type : "POST",
+		cache : false,
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify({
+			repoUrl : url
+		}),
+		success : function(html) {
+			console.log("success");
+			$('#loadingmessage').hide(); // hide the loading message
+		},
+		error : function(html) {
+			$('#alert').text(html.responseJSON.message);
+			$('#alert').show();
+			$('#loadingmessage').hide();
+			
+			console.log("error");
+		}
+	});
+});
+</script>
 </html>
