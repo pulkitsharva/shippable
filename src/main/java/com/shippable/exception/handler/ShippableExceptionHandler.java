@@ -14,7 +14,7 @@ import com.shippable.exception.DependentServiceException;
 import com.shippable.exception.NotFoundException;
 import com.shippable.exception.ShippableErrorInfo;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages="com.shippable.controller")
 public class ShippableExceptionHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(ShippableExceptionHandler.class);
