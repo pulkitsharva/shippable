@@ -74,7 +74,7 @@
 		}
 		$('#loadingmessage').show(); // show the loading message.
 		$.ajax({
-			url : "/shippable/issues",
+			url : "/issues",
 			type : "POST",
 			cache : false,
 			dataType : "json",
