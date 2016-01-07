@@ -38,9 +38,8 @@ public class GithubService {
     IssueResponse issueResponse = null;
     HashMap<String, Object> urlParam = new HashMap<String, Object>();
     urlParam.put("state", "open");
-
     List<Issue> totalIssues =
-        githubServiceProxy.getAllIssue(getUserAndRepo(issueRequest), urlParam);
+        githubServiceProxy.getAllIssue(issueRequest.getRepoUrl(),getUserAndRepo(issueRequest), urlParam);
     if (totalIssues != null && !totalIssues.isEmpty()) {
       issueResponse = issueUtil.createResponse(totalIssues);
     }

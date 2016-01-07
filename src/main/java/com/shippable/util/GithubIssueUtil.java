@@ -22,9 +22,9 @@ public class GithubIssueUtil {
     issueResponse.setTotalissues(totalIssues.size());
     for (Issue issue : totalIssues) {
       if (issue.getCreatedAt().compareTo(sevenDaysOld) >= 0
-          && issue.getCreatedAt().compareTo(oneDayOld) >= 0) {
+          && issue.getCreatedAt().compareTo(oneDayOld) <= 0) {
         issuesMoreThan24hr++;
-      } else if (oneDayOld.compareTo(issue.getCreatedAt()) >= 0) {
+      } else if (oneDayOld.compareTo(issue.getCreatedAt()) <= 0) {
         issuesIn24hr++;
       }
     }

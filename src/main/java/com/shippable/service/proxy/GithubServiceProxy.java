@@ -23,12 +23,11 @@ public class GithubServiceProxy {
 
   private static final Logger LOG = LoggerFactory.getLogger(GithubServiceProxy.class);
 
-  public List<Issue> getAllIssue(String repoUrl,Map<String,Object> urlParam) {
+  public List<Issue> getAllIssue(String originalUrl,String repoUrl,Map<String,Object> urlParam) {
     List<Issue> issues =null;
- 
       String response =
           httpClient
-              .httpGetApiCall(hostname,repoUrl, urlParam,null);
+              .httpGetApiCall(originalUrl,hostname,repoUrl, urlParam,null);
       try {
       issues =
           objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(List.class, Issue.class));

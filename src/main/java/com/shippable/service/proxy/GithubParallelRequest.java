@@ -23,7 +23,7 @@ public class GithubParallelRequest implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    List<Issue> issues = githubServiceProxy.getAllIssue(repoUrl, urlParams);
+    List<Issue> issues = githubServiceProxy.getAllIssue(null,repoUrl, urlParams);
     if (issues != null)
       return issues.size();
     else

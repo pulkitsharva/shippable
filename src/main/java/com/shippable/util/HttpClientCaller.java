@@ -37,7 +37,7 @@ public class HttpClientCaller {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientCaller.class);
 
-  public String httpGetApiCall(String serviceHostname, String requestUrl, String userAccesToken,
+  public String httpGetApiCall(String originalUrl,String serviceHostname, String requestUrl, String userAccesToken,
       Map<String, Object> urlParams, Boolean throw503) {
     String output = null;
     HttpClient httpclient = HttpClientBuilder.create().build();
@@ -48,8 +48,6 @@ public class HttpClientCaller {
       params.add(new BasicNameValuePair(pair.getKey().toString(), pair.getValue().toString()));
     }
     String paramString = URLEncodedUtils.format(params, "utf-8");
-
-
     HttpGet httpget = new HttpGet(serviceHostname + requestUrl + "/issues?" + paramString);
     LOGGER.info("Service : " + serviceHostname + requestUrl);
     HttpResponse response = null;
@@ -58,7 +56,7 @@ public class HttpClientCaller {
       response = httpclient.execute(httpget);
     }
     catch(UnknownHostException une){
-      throw new DependentServiceException(requestUrl, response.getStatusLine().getStatusCode());
+      throw new DependentServiceException("Unable to connect",requestUrl);
       
     }catch (Exception e) {
       LOGGER.error("Error while getting response");
@@ -67,10 +65,10 @@ public class HttpClientCaller {
 
     LOGGER.info("Service Response:" + response.getStatusLine().getStatusCode());
     if (response.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
-      throw new NotFoundException(ErrorCode.NOT_FOUND, "https://github.com" + requestUrl);
+      throw new NotFoundException(ErrorCode.NOT_FOUND, originalUrl);
     }
     if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value() && throw503) {
-      throw new DependentServiceException(requestUrl, response.getStatusLine().getStatusCode());
+      throw new DependentServiceException(originalUrl, response.getStatusLine().getStatusCode());
     }
     try {
       output = EntityUtils.toString(response.getEntity());
@@ -81,9 +79,9 @@ public class HttpClientCaller {
     return output;
   }
 
-  public String httpGetApiCall(String serviceHostname, String requestUrl,
+  public String httpGetApiCall(String originalUrl,String serviceHostname, String requestUrl,
       Map<String, Object> urlParam, String userAccesToken) {
-    return httpGetApiCall(serviceHostname, requestUrl, userAccesToken, urlParam, true);
+    return httpGetApiCall( originalUrl,serviceHostname, requestUrl, userAccesToken, urlParam, true);
   }
 
 
