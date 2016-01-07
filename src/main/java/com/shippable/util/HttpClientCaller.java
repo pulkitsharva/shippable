@@ -1,6 +1,7 @@
 package com.shippable.util;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,7 +56,11 @@ public class HttpClientCaller {
 
     try {
       response = httpclient.execute(httpget);
-    } catch (Exception e) {
+    }
+    catch(UnknownHostException une){
+      throw new DependentServiceException(requestUrl, response.getStatusLine().getStatusCode());
+      
+    }catch (Exception e) {
       LOGGER.error("Error while getting response");
       return null;
     }
